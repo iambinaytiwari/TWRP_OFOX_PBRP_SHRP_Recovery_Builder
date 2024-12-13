@@ -14,19 +14,19 @@ on:
       DEVICE_TREE:
         description: 'Custom Recovery Tree'
         required: true
-        default: 'https://github.com/<username>/<repo_name>'
+        default: 'https://github.com/iambinaytiwari/surya'
       DEVICE_TREE_BRANCH:
         description: 'Custom Recovery Tree Branch (use master if default)'
         required: true
-        default: 'your_branch_name'
+        default: 'fox-12.1'
       DEVICE_NAME:
         description: 'Specify your Device Codename' # As is, just like your PRODUCT_DEVICE in your device tree.
         required: true
-        default: '7304X'
+        default: 'surya'
       DEVICE_PATH:
         description: 'Specify your Device Path (Check the DEVICE_PATH in BoardConfig.mk)' # As is, just like your DEVICE_PATH in your BoardConfig.mk
         required: true
-        default: 'device/device`s_company/Codename'
+        default: 'device/xiaomi/surya'
       BUILD_TARGET:
         description: 'Specify your Build Target' # The image suffix will be added later in build step.
         required: true
@@ -134,9 +134,15 @@ jobs:
             echo "::warning::The zip file isn't present but make sure the image is from only after 100% completion in build stage"
         fi
 
+    - name: Upload Kernel To Artifact
+      uses: actions/upload-artifact@v4
+      with:
+          name: Kernels
+          path: ${{ env.OUTPUT_DIR }}/OrangeFox*.zip
+                   
     - name: Upload to Release
       if: env.CHECK_IMG_IS_OK == 'true'
-      uses: softprops/action-gh-release@master
+      uses: softprops/action-gh-release@v1
       with:
         files: |
           ${{ env.OUTPUT_DIR }}/OrangeFox*.img
